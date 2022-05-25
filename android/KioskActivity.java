@@ -6,13 +6,16 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import org.apache.cordova.*;
+
 import android.widget.*;
 import android.view.Window;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.KeyEvent;
 import android.view.ViewGroup.LayoutParams;
+
 import java.lang.Integer;
 import java.util.Collections;
 import java.util.Set;
@@ -44,17 +47,17 @@ public class KioskActivity extends CordovaActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.init();
-        
+
         if (running) {
             finish(); // prevent more instances of kiosk activity
         }
-        
+
         loadUrl(launchUrl);
-        
+
         // https://github.com/apache/cordova-plugin-statusbar/blob/master/src/android/StatusBar.java
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        
+
         // https://github.com/hkalina/cordova-plugin-kiosk/issues/14
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
@@ -63,7 +66,7 @@ public class KioskActivity extends CordovaActivity {
         // status bar is hidden, so hide that too if necessary.
         ActionBar actionBar = getActionBar();
         if (actionBar != null) actionBar.hide();
-        
+
         // add overlay to prevent statusbar access by swiping
         statusBarOverlay = StatusBarOverlay.createOrObtainPermission(this);
     }
@@ -79,18 +82,51 @@ public class KioskActivity extends CordovaActivity {
 
     @Override
     protected void onPause() {
-            super.onPause();
-            ActivityManager activityManager = (ActivityManager) getApplicationContext()
-                    .getSystemService(Context.ACTIVITY_SERVICE);
-            activityManager.moveTaskToFront(getTaskId(), 0);
-    }     
-    
+        super.onPause();
+        ActivityManager activityManager = (ActivityManager) getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.moveTaskToFront(getTaskId(), 0);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        event.startTracking();
         System.out.println("onKeyDown event: keyCode = " + event.getKeyCode());
-        return ! allowedKeys.contains(event.getKeyCode()); // prevent event from being propagated if not allowed
+        if (event.getRepeatCount() == 0) {
+            Intent local = new Intent();
+            local.setAction("com.kreolact.bolt.keypress");
+            local.putExtra("keyCode", event.getKeyCode());
+            local.putExtra("isLongPress", event.isLongPress());
+            local.putExtra("event", "onKeyDown");
+            sendBroadcast(local);
+        }
+        return !allowedKeys.contains(event.getKeyCode()); // prevent event from being propagated if not allowed
     }
-    
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        System.out.println("onKeyUp event: keyCode = " + event.getKeyCode());
+        Intent local = new Intent();
+        local.setAction("com.kreolact.bolt.keypress");
+        local.putExtra("keyCode", event.getKeyCode());
+        local.putExtra("isLongPress", event.isLongPress());
+        local.putExtra("event", "onKeyUp");
+        sendBroadcast(local);
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        System.out.println("onKeyLongPress event: keyCode = " + event.getKeyCode());
+        Intent local = new Intent();
+        local.setAction("com.kreolact.bolt.keypress");
+        local.putExtra("keyCode", event.getKeyCode());
+        local.putExtra("isLongPress", event.isLongPress());
+        local.putExtra("event", "onKeyLongPress");
+        sendBroadcast(local);
+        return super.onKeyLongPress(keyCode, event);
+    }
+
     @Override
     public void finish() {
         System.out.println("Never finish...");
@@ -101,18 +137,18 @@ public class KioskActivity extends CordovaActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(!hasFocus) {
+        if (!hasFocus) {
             System.out.println("Focus lost - closing system dialogs");
-            
+
             Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
             sendBroadcast(closeDialog);
-            
-            ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+
+            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             am.moveTaskToFront(getTaskId(), ActivityManager.MOVE_TASK_WITH_HOME);
-            
+
             // sometime required to close opened notification area
             Timer timer = new Timer();
-            timer.schedule(new TimerTask(){
+            timer.schedule(new TimerTask() {
                 public void run() {
                     Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
                     sendBroadcast(closeDialog);
@@ -121,4 +157,3 @@ public class KioskActivity extends CordovaActivity {
         }
     }
 }
-

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-kiosk" version="0.2">
+        id="cordova-plugin-kiosk" version="1.0.1">
 
     <name>Cordova Kiosk Mode</name>
     <author>Jan Kalina</author>
@@ -13,7 +13,7 @@
         or by uninstallation app using adb. (Keeping USB debug allowed recommended.)
         If applications starts as usual (not as launcher), no restrictions will be applied.
 
-        Plugin website: https://github.com/honza889/cordova-plugin-kiosk
+        Plugin website: https://github.com/kreolact/cordova-plugin-kiosk
         Example app: https://github.com/honza889/cordova-kiosk-demo
 
         This plugin is for Android for now. Support of iOS would be useless,
