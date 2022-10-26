@@ -24,11 +24,11 @@ By adding this Cordova plugin the Cordova app becomes a homescreen (also known a
 
 To add plugin into existing Cordova / Phonegap application use:
 
-    cordova plugin add https://github.com/hkalina/cordova-plugin-kiosk.git
+    cordova plugin add https://github.com/kreolact/cordova-plugin-kiosk.git
 
 To add specific version of this plugin (like `v2.0`) use:
 
-    cordova plugin add https://github.com/hkalina/cordova-plugin-kiosk.git#v2.0
+    cordova plugin add https://github.com/kreolact/cordova-plugin-kiosk.git#v2.0
 
 Android platform files (like `AndroidManifest.xml`) should be updated immediately. If you will modify plugin code, you will need to re-add android platform to plugin modifications take effect:
 
