@@ -78,17 +78,42 @@ public class KioskActivity extends CordovaActivity {
     }
 
     @Override
-    protected void onPause() {
-            super.onPause();
-            ActivityManager activityManager = (ActivityManager) getApplicationContext()
-                    .getSystemService(Context.ACTIVITY_SERVICE);
-            activityManager.moveTaskToFront(getTaskId(), 0);
-    }     
-    
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        event.startTracking();
         System.out.println("onKeyDown event: keyCode = " + event.getKeyCode());
-        return ! allowedKeys.contains(event.getKeyCode()); // prevent event from being propagated if not allowed
+        if (event.getRepeatCount() == 0) {
+            Intent local = new Intent();
+            local.setAction("com.kreolact.bolt.keypress");
+            local.putExtra("keyCode", event.getKeyCode());
+            local.putExtra("isLongPress", event.isLongPress());
+            local.putExtra("event", "onKeyDown");
+            sendBroadcast(local);
+        }
+        return !allowedKeys.contains(event.getKeyCode()); // prevent event from being propagated if not allowed
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        System.out.println("onKeyUp event: keyCode = " + event.getKeyCode());
+        Intent local = new Intent();
+        local.setAction("com.kreolact.bolt.keypress");
+        local.putExtra("keyCode", event.getKeyCode());
+        local.putExtra("isLongPress", event.isLongPress());
+        local.putExtra("event", "onKeyUp");
+        sendBroadcast(local);
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        System.out.println("onKeyLongPress event: keyCode = " + event.getKeyCode());
+        Intent local = new Intent();
+        local.setAction("com.kreolact.bolt.keypress");
+        local.putExtra("keyCode", event.getKeyCode());
+        local.putExtra("isLongPress", event.isLongPress());
+        local.putExtra("event", "onKeyLongPress");
+        sendBroadcast(local);
+        return super.onKeyLongPress(keyCode, event);
     }
     
     @Override

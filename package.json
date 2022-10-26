@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-kiosk",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Cordova plugin to create Cordova application with kiosk mode",
   "cordova": {
     "id": "cordova-plugin-kiosk",
