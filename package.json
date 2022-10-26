@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kreolact/cordova-plugin-kiosk.git"
+    "url": "https://github.com/honza889/cordova-plugin-kiosk.git"
   },
   "keywords": [
     "cordova",
@@ -22,7 +22,7 @@
   "author": "Jan Kalina",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/kreolact/cordova-plugin-kiosk/issues"
+    "url": "https://github.com/honza889/cordova-plugin-kiosk/issues"
   },
-  "homepage": "https://github.com/kreolact/cordova-plugin-kiosk"
+  "homepage": "https://github.com/honza889/cordova-plugin-kiosk"
 }

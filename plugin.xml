@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-kiosk" version="1.0.2">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-kiosk" version="1.0.2">
 
     <name>Cordova Kiosk Mode</name>
     <author>Jan Kalina</author>
@@ -13,7 +12,7 @@
         or by uninstallation app using adb. (Keeping USB debug allowed recommended.)
         If applications starts as usual (not as launcher), no restrictions will be applied.
 
-        Plugin website: https://github.com/kreolact/cordova-plugin-kiosk
+        Plugin website: https://github.com/honza889/cordova-plugin-kiosk
         Example app: https://github.com/honza889/cordova-kiosk-demo
 
         This plugin is for Android for now. Support of iOS would be useless,
@@ -38,16 +37,15 @@
         </config-file>
 
         <edit-config file="AndroidManifest.xml" target="/manifest/application/activity[@android:label='@string/activity_name']" mode="merge">
-            <activity android:name="jk.cordova.plugin.kiosk.KioskActivity" android:keepScreenOn="true" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:exported="true">
+            <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode" android:exported="true" android:keepScreenOn="true" android:label="@string/activity_name" android:launchMode="singleTop" android:name="jk.cordova.plugin.kiosk.KioskActivity" android:theme="@style/Theme.App.SplashScreen" android:windowSoftInputMode="adjustResize">
             </activity>
         </edit-config>
 
-        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:label='@string/activity_name']">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-                    <category android:name="android.intent.category.DEFAULT" /><!-- Handler of app icon (required to be launcher) -->
-                    <category android:name="android.intent.category.HOME" /><!-- Handler of Home button -->
-                </intent-filter>
+        <config-file target="AndroidManifest.xml" parent="/manifest/application/activity[@android:label='@string/activity_name']/intent-filter">
+            <category android:name="android.intent.category.DEFAULT" />
+            <!-- Handler of app icon (required to be launcher) -->
+            <category android:name="android.intent.category.HOME" />
+            <!-- Handler of Home button -->
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
@@ -66,9 +64,10 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
-                <uses-permission android:name="android.permission.REORDER_TASKS"/>
-                <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-                <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+            <uses-permission android:name="android.permission.BROADCAST_CLOSE_SYSTEM_DIALOGS" />
+            <uses-permission android:name="android.permission.REORDER_TASKS"/>
+            <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
         </config-file>
 
         <source-file src="android/KioskActivity.java" target-dir="src/jk/cordova/plugin/kiosk" />
